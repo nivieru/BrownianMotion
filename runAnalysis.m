@@ -1,22 +1,29 @@
-%% Global parameters
+%% Global parameters and initializations
+trackingDir = 'tracking'; % path of tracking code
+msdDir = 'msdanalyzer'; % path of msdanalyser code
+addpath(genpath(trackingDir)); % Add code to path
+addpath(genpath(msdDir));
+
 set(0, 'DefaultFigureRenderer', 'painters');
 format = '-dpdf'; % Save plots with this format. '-dpdf' and '-depsc' are vector formats, good for making figures in adobe illustrator or the free alternative inkscape. '-dpng' will save a bitmap image
-videoFilename = 'C:\Users\Nivieru\Nextcloud\Documents\lab5-6\dima and eliya\Mix810xfluoor_April_15_2019_16-36-54'; % Enter video filename or directory here.
-
 calibration = 0.5; % Video calibration in microns per pixel, change as needed
 
-outputDirname = ['out_',char(datetime)]; % add date and time to output dir name so we don't automatically overwite.
+videoFilename = 'C:\Users\Nivieru\Nextcloud\Documents\lab5-6\dima and eliya\Mix810xfluoor_April_15_2019_16-36-54'; % Enter video filename or directory here.
+d = datetime;
+d.Format = 'dd-MM-yy HH_mm_ss';
+outputDirname = ['out_',char(d)]; % add date and time to output dir name so we don't automatically overwite.
 
 [path,fn,ext] = fileparts(videoFilename); % get output path from filename.
 if isempty(ext) %no extension - fn is actually the last part of the path.
     path = fullfile(path,fn);
 end
 outputDir = fullfile(path,outputDirname);
-fprintf('writing to folder %s\n', outputDir);
 
+fprintf('writing to folder: %s\n', outputDir);
 ff = @(filename) fullfile(outputDir, filename); % Function to add outputDir to filnames;
 mkdir(outputDir); % make output dir
 writecell({videoFilename}, ff('videoFilename.txt')); % save video file name
+
 %% Parameters for video proccesing and particle traking.
 %%% Test and change accordingly. Different exposures, obectives and imaging
 %%% parameters ay require different parameters here.
@@ -42,10 +49,12 @@ trackingParameters.good = 5; % Might need to change
 trackingParameters.quiet = 0;
 
 save(ff('trackingParameters'),'trackingParameters'); % Save parameters.
+
 %% Get tracks from video
 [tracksForMsdanalyzer, framerate] = tracksFromMovie(videoFilename, trackingParameters); % Get tracks from video
 save(ff('tracks'),'tracksForMsdanalyzer'); % Save tracks so we can reuse them without running everything again
 save(ff('framerate'), 'framerate');
+
 %% Use MSDAnalyzer object
 ma = msdanalyzer(2,'um','sec', 1/framerate);% Initialize MSDAnalyzer object
 ma = ma.addAll(tracksForMsdanalyzer); % Add tracks to msd object
@@ -101,6 +110,13 @@ title('Mean MSD');
 savefig(meanMSDFig,ff('meanMSDFig.fig'),'compact');
 print(meanMSDFig, ff('meanMSDFig'), format);
 
+MSDFig = figure;  % Plot mean MSD and linear fit
+[~, ha] = ma.plotMSD;
+hold on;
+title('MSD');
+savefig(meanMSDFig,ff('MSDFig.fig'),'compact');
+print(meanMSDFig, ff('MSDFig'), format);
+
 [lfo, lgof] = ma.fitLogLogMeanMSD;
 loglogMeanMSDFig = figure;  % Plot mean MSD and loglog fit on a log-log scale
 [h, ha] = ma.plotMeanMSD;
@@ -114,7 +130,6 @@ ha.XScale = 'log';
 ha.YScale = 'log';
 savefig(meanMSDFig,ff('loglogMeanMSDFig.fig'),'compact');
 print(meanMSDFig, ff('loglogMeanMSDFig'), format);
-
 
 save(ff('msdAnalyzerObj'),'ma'); % Save MSDanalyzer object so we can return to it later without running everything again.
 
