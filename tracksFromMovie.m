@@ -1,14 +1,18 @@
-function [tracksForMsdanalyzer, framerate] = tracksFromMovie(videoFilename, trackingParameters)
+function [tracksForMsdanalyzer, framerate] = tracksFromMovie(videoFilename, trackingParameters, interactive)
     %TRACKSFROMMOVIE - track particles in movie and generate tracks to use
-    %with MSDanalyzer objects.
+    %   with MSDanalyzer objects.
     %Inputs:
-    %	videoFilename - name of avi file or a directory containing avi file
-    %	trackingParameters - structure contatining parameters for the various steps.
+    % videoFilename - name of avi file or a directory containing avi file
+    % trackingParameters - structure contatining parameters for the various steps.
+    % intractive - if ture, pause after first frame to check bandpass
+    %   output, and work interactively in cntrd
     %Outputs:
-    %   tracksForMsdanalyzer - particle tracks formatted for MSDAnalyzer
+    % tracksForMsdanalyzer - particle tracks formatted for MSDAnalyzer
+    % framerate - frame rate read from the movie log file
+
 %-------------------------------------------------------------------------%
     
-    % validate if file exists
+    % Validate if file exists
     isFile = exist(videoFilename,'file');
     if isFile == 7 % videoFilename is a directory
         DIR = videoFilename;
@@ -36,7 +40,7 @@ function [tracksForMsdanalyzer, framerate] = tracksFromMovie(videoFilename, trac
     PKsize = trackingParameters.PKsize;
     
     % Parameters for cnt
-    CNTinteractive = trackingParameters.CNTinteractive;
+    CNTinteractive = interactive;
     CNTsize = trackingParameters.CNTsize;
     
     % Read movie frame by frame, apply bandpass to each frame, find
@@ -50,8 +54,16 @@ function [tracksForMsdanalyzer, framerate] = tracksFromMovie(videoFilename, trac
         end
         frameBpass = bpass(frame,BPlnoise,BPlobject,BPthreshold); % Bandpass filter. Might not be needed, or maybe a different filter could be better.
         if frameNum == 1 % Show first frame before and after bandpass
-            figure; imagesc(frame); title('first frame');
-            figure; imagesc(frameBpass); title('first frame after bandpass');
+            figure('Position', [50,50,1000,400]);
+            ax1 = subplot(1,2,1);
+            imagesc(frame); title('first frame');
+            ax2 = subplot(1,2,2);
+            imagesc(frameBpass); title('first frame after bandpass');
+            linkaxes([ax1, ax2])
+            if interactive
+                suptitle('press any key to continue');
+                pause
+            end
         end
         pk = pkfnd(frameBpass,PKthreshold,PKsize); % Peak finder.
         if CNTinteractive
