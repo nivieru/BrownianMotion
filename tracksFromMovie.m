@@ -5,7 +5,7 @@ function [tracksForMsdanalyzer, framerate] = tracksFromMovie(videoFilename, trac
     % videoFilename - name of avi file or a directory containing avi file
     % trackingParameters - structure contatining parameters for the various steps.
     % intractive - if ture, pause after first frame to check bandpass
-    %   output, and work interactively in cntrd
+    %   output, and work interactively in cntrd on first frame.
     %Outputs:
     % tracksForMsdanalyzer - particle tracks formatted for MSDAnalyzer
     % framerate - frame rate read from the movie log file
@@ -40,7 +40,7 @@ function [tracksForMsdanalyzer, framerate] = tracksFromMovie(videoFilename, trac
     PKsize = trackingParameters.PKsize;
     
     % Parameters for cnt
-    CNTinteractive = interactive;
+%     CNTinteractive = interactive;
     CNTsize = trackingParameters.CNTsize;
     
     % Read movie frame by frame, apply bandpass to each frame, find
@@ -53,6 +53,7 @@ function [tracksForMsdanalyzer, framerate] = tracksFromMovie(videoFilename, trac
             frame = squeeze(frame(:,:,1)); % The video has 3 channels but is really BW, keep only one channel.
         end
         frameBpass = bpass(frame,BPlnoise,BPlobject,BPthreshold); % Bandpass filter. Might not be needed, or maybe a different filter could be better.
+        CNTinteractive = false;
         if frameNum == 1 % Show first frame before and after bandpass
             figure('Position', [50,50,1000,400]);
             ax1 = subplot(1,2,1);
@@ -62,7 +63,8 @@ function [tracksForMsdanalyzer, framerate] = tracksFromMovie(videoFilename, trac
             linkaxes([ax1, ax2])
             if interactive
                 suptitle('press any key to continue');
-                pause
+                CNTinteractive = true;
+                pause;
             end
         end
         pk = pkfnd(frameBpass,PKthreshold,PKsize); % Peak finder.

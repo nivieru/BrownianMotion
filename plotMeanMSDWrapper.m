@@ -1,5 +1,13 @@
 function meanMSDFig = plotMeanMSDWrapper(ma, fo, t_fit, Dtheory)
-meanMSDFig = figure;  % Plot mean MSD and linear fit
+% PLOTMEANMSDWRAPPER plot Mean MSD, fit, and theoretical line.
+% INPUTS:
+% ma - MSDAnalyzser object.
+% fo (optional) - linear fit to mean MSD.
+% t_fit (optional) - times at which the fit was taken.
+% Dtheory (optional) - theoretical value if diffusion coefficient to plot
+%   against experiemntal result.
+
+meanMSDFig = figure;  
 [h, ~] = ma.plotMeanMSD(gca, false); % plotMeanMSD(gca, true) will also plot the standard deviation
 if isstruct(h)
     hLine = h.mainLine;

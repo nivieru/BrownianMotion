@@ -1,7 +1,23 @@
 function [ff, varargout] = loadAnalysis(analysisFolder, varargin)
-ff = @(filename) fullfile(analysisFolder, filename); % Function to add outputDir to filnames;
-if length(varargin) == 0
-    loadFiles = {'framerate', 'trackingParameters', 'tracks', 'ma', 'results', 'videoFilename'};
+% LOADANALYSIS loads selected .mat files saved to the analysis folder
+% INPUTS:
+% analysisFolder - The analysis folder.
+% varargin - a comma seperated list of filenames (without the .mat suffix)
+%   to load.
+% OUTPUTS:
+% ff - a handle to a function that adds the analysisFolder path to a
+%   filename. To be used to save or load from the analysis folder.
+%   varargout - variable to hold the loaded data. One for each of varargin.
+%
+% Example usages:
+% [ff, ma, framerate] = loadAnalysis(analysisFolder, 'ma', 'framerate');
+% ff = loadAnalysis(analysisFolder, []); % Don't load anything, just get
+%   the ff function to use for loading or saving.
+
+
+ff = @(filename) fullfile(analysisFolder, filename); % Function to add analysisFolder to filnames;
+if isempty(varargin) % Default to load everything
+    loadFiles = {'framerate', 'trackingParameters', 'tracksForMsdanalyzer', 'ma', 'results', 'videoFilename'};
 else
     loadFiles = varargin;
 end

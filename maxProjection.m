@@ -1,5 +1,6 @@
 function maxProj = maxProjection(videoFilename)
-    
+% MAXPROJECTION create a max projection of video
+
     % validate if file exists
     isFile = exist(videoFilename,'file');
     if isFile == 7 % videoFilename is a directory
@@ -10,7 +11,7 @@ function maxProj = maxProjection(videoFilename)
         else
             videoFilename = fullfile(DIR,fn);
         end
-    elseif ifFile ~=2
+    elseif isFile ~=2
         error('file not found');
     end
     

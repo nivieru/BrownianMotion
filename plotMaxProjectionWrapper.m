@@ -1,4 +1,7 @@
 function maxProjFig = plotMaxProjectionWrapper(ma, videoFilename, calibration)
+% PLOTMAXPROJECTIONWRAPPER plot particle tracks over max projection image
+% of the video.
+
 maxProj = maxProjection(videoFilename); % Calculate max projection
 imageX = [1, size(maxProj,2)] * calibration; % Image coordinates to match calibration
 imageY = [1, size(maxProj,1)] * calibration;

@@ -41,7 +41,7 @@ timestampFlag = true; % Change to false to avoid timestamping
 %%% Test and change accordingly. Different exposures, obectives and imaging
 %%% parameters may require different parameters here.
 
-trackingParameters.calibration = 0.7353;
+trackingParameters.calibration = 0.7353; % um per pixel
 % Parameters for bandpass
 trackingParameters.BPlnoise = 0.5;
 trackingParameters.BPlobject = 10;

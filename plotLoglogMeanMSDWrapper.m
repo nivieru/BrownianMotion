@@ -1,5 +1,17 @@
 function loglogMeanMSDFig = plotLoglogMeanMSDWrapper(ma, lfo, t_fit, x_err, D, vaFlag)
-loglogMeanMSDFig = figure;  % Plot mean MSD and loglog fit on a log-log scale
+% PLOTLOGLOG MEANMSDWRAPPER plot Mean MSD on log-log scale, fit to log-log
+% mean MSD, and visual aids of slope 1 and 2.
+% INPUTS:
+% ma - MSDAnalyzser object.
+% lfo - loglog linear fit to mean MSD.
+% t_fit (optional) - times at which the fit was taken.
+% x_err (optional) - resolution/error in bead position measurment.
+% D (optional, to be used with vaFlag) - diffusion coefficient to use as a
+%   basis for visual aids positioning.
+% vaFlag (optional) - If true, plot visual aids fo slope 1 and 2. their
+%   vertical position depends on the value of D.
+
+loglogMeanMSDFig = figure;
 [h, ha] = ma.plotMeanMSD();
 if isstruct(h)
     hLine = h.mainLine;
