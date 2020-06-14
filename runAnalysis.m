@@ -34,14 +34,14 @@ addpath(genpath(msdDir));
 set(0, 'DefaultFigureRenderer', 'painters');
 %% Parameters 
 videoDirOrFilename = 'C:\Users\Nivieru\Nextcloud\Documents\lab5-6\dima and eliya\Mix1110xflour_April_15_2019_17-44-07'; % Enter video filename or directory here.
-interactive = false; % Cahnge to false to run with no pauses 
+interactive = true; % Cahnge to false to run with no pauses 
 timestampFlag = true; % Change to false to avoid timestamping 
 
 %%% Parameters for video proccesing and particle tracking.
 %%% Test and change accordingly. Different exposures, obectives and imaging
 %%% parameters may require different parameters here.
 
-trackingParameters.calibration = 1.02;
+trackingParameters.calibration = 0.7353;
 % Parameters for bandpass
 trackingParameters.BPlnoise = 0.5;
 trackingParameters.BPlobject = 10;
