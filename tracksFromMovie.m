@@ -22,7 +22,7 @@ function [tracksForMsdanalyzer, framerate] = tracksFromMovie(videoFilename, trac
         else
             videoFilename = fullfile(DIR,fn);
         end
-    elseif ifFile ~=2
+    elseif isFile ~=2
         error('file not found');
     end
     

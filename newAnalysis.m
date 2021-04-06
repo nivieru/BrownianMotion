@@ -1,13 +1,13 @@
 function [ff,analysisDir] = newAnalysis(videoDirOrFilename, timestampFlag)
 % NEWANALYSIS creates an analysis folder in the video containing folder.
 % INPUTS:
-%   videoDirOrFilename - Path to the video file or its contating folder. 
-%   timestampFlag - If true, time-stamp the anlysis folder, to avoid
+% videoDirOrFilename - Path to the video file or its contating folder. 
+% timestampFlag - If true, time-stamp the anlysis folder, to avoid
 %   overwriting previous results.
 % OUTPUTS:
-%   ff - handle to a function that adds the analysisFolder path to a
+% ff - handle to a function that adds the analysisFolder path to a
 %   filename. To be used to save or load from the analysis folder.
-%   analysisDir - path to analysis folder.
+% analysisDir - path to analysis folder.
 
 if exist('timestampFlag', 'var') && timestampFlag == true
     d = datetime;
