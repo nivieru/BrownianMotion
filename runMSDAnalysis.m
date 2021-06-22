@@ -1,4 +1,4 @@
-function [ff, ma, results] = runMSDAnalysis(analysisDir, clip_factor, forceNewAnalysis)
+function [ff, ma, results] = runMSDAnalysis(analysisDir, clip_factor, loadExisting)
 %% runMSDAnalysis Helper function to use MSDAnalyzer object
 % This function creates or loads an existitng MSDAnalyzer object, run the
 % MSD analysis. plots the tracks and MSD, and computes D and alpha.
@@ -13,17 +13,18 @@ function [ff, ma, results] = runMSDAnalysis(analysisDir, clip_factor, forceNewAn
 % clip_factor - region of data to use for fits - will determine the
 %   computed values of D and alpha.
 %
-% forceNewAnalysis [default: false] - if set to true will start a new
-%   analysis instead of loading an existitng one.
+% loadExisting [default: false] - if set to true will load an existing
+%   analysis instead of doing the analysis again.
 
+%format = '-dpng';
 format = '-dpdf'; % Save plots with this format. '-dpdf' and '-depsc' are vector formats, good for making figures in adobe illustrator or the free alternative inkscape. '-dpng' will save a bitmap image
 
 results.clip_factor = clip_factor;
 
-% read tracks and parameters from disk:
+% Read tracks and parameters from disk:
 [ff, framerate, trackingParameters, tracksForMsdanalyzer, videoFilename] = loadAnalysis(analysisDir, 'framerate', 'trackingParameters', 'tracksForMsdanalyzer', 'videoFilename');
 
-if exist('forceNewAnalysis', 'var') && forceNewAnalysis==true
+if exist('loadExisting', 'var') && loadExisting==false
     ma = [];
 else
     % try to read existing MSDAnalyzer from disk:
@@ -31,14 +32,17 @@ else
 end
 
 if isempty(ma)
+    fprintf('Running new MSD analysis...');
     % Initialize new MSDAnalyzer object:
     ma = msdanalyzer(2,'um','sec', 1/framerate);
     ma = ma.addAll(tracksForMsdanalyzer); % Add tracks to msd object
-    ma = ma.computeDrift('angvelocity'); % Linear and rotational drift correction. Or try 'velocity' for only linear drift correction.
+    ma = ma.computeDrift('angvelocity',[200, 50]); % Linear and rotational drift correction. Or try 'velocity' for only linear drift correction.
     ma = ma.computeMSD; % Compute MSD for all tracks:
     ma = ma.fitMSD(results.clip_factor); % Fit each individual track, might be usfeul for something later
     ma = ma.fitLogLogMSD(results.clip_factor); % Fit each individual track, ight be usfeul for something later
     save(ff('ma'),'ma'); % Save MSDanalyzer object so we can return to it later without running everything again.
+else
+    fprintf('Existing MSD analysis loaded');
 end
 
 %%% Plot tracks

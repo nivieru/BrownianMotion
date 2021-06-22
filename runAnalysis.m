@@ -33,8 +33,14 @@ addpath(genpath(trackingDir)); % Add code to path
 addpath(genpath(msdDir));
 set(0, 'DefaultFigureRenderer', 'painters');
 %% Parameters 
-videoDirOrFilename = 'C:\Users\Nivieru\Nextcloud\Documents\lab5-6\dima and eliya\Mix1110xflour_April_15_2019_17-44-07'; % Enter video filename or directory here.
-interactive = true; % Cahnge to false to run with no pauses 
+% In order to understand these parameters, go over the tutorial at
+% http://www.physics.emory.edu/faculty/weeks//idl/tracking.html
+% and check the comments in the tracking code functions (cntrd, bpass,
+% pkfnd, track) and trackFromMovies.
+
+videoDirOrFilename = 'W:\phkinnerets\home\niv\lab5-6\dima and eliya\Mix1110xflour_April_15_2019_17-44-07'; % Enter video filename or directory here.
+videoDirOrFilename = 'W:\phkinnerets\home\niv\lab5-6\from usb\DiffusionExperimentLab5\181231\AxioCamICm1_fast_10x_flr_December_31_2018_17-08-37';
+interactive = false; %true; % Cahnge to false to run with no pauses 
 timestampFlag = true; % Change to false to avoid timestamping 
 
 %%% Parameters for video proccesing and particle tracking.
@@ -77,6 +83,8 @@ save(ff('framerate'), 'framerate');
 save(ff('tracksForMsdanalyzer'),'tracksForMsdanalyzer'); % Save tracks so we can reuse them without running everything again
 
 %% Analyse tracks using MSDAnalyzer
-clip_factor = [0.02, 0.18]; % Region of data to fit.
-forceNewAnalysis = false;
-[ff, ma, results] = runMSDAnalysis(analysisDir, clip_factor, forceNewAnalysis);
+% Go over the tutorial at https://tinevez.github.io/msdanalyzer/ and the
+% comments in the code.
+clip_factor = [0.02, 0.18]; % Region of data to fit. Change according to data.
+loadExisting = false; % Change to true in order to load an existing analysis and output the plots. False to run or rerun the analysis.
+[ff, ma, results] = runMSDAnalysis(analysisDir, clip_factor, loadExisting);

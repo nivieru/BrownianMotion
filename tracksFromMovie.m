@@ -96,7 +96,7 @@ function [tracksForMsdanalyzer, framerate] = tracksFromMovie(videoFilename, trac
     param.quiet = trackingParameters.quiet;
     maxdisp = trackingParameters.maxdisp;
     
-    calibration = trackingParameters.calibration'
+    calibration = trackingParameters.calibration';
     trDiffAll = [];
     tracks = track(cntAll(:,[1,2,5]), maxdisp, param); % generate particle tracks
     for trackNum = 1:max(tracks(:,4)) % collect tracks in format suitable for msdAnalyzer
